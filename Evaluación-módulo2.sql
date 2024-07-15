@@ -211,7 +211,6 @@ SELECT title, rental_duration
 FROM film
 WHERE rental_duration > 5
 
-
 -- Para llegar a los rental_id tenemos que pasar por la tabla inventory
 
 SELECT title, rental_duration, r.rental_id
@@ -221,12 +220,22 @@ FROM film
 WHERE r.rental_id IN (
 	SELECT rental_id 
    	FROM rental
-   	WHERE rental_duration > 5)
+   	WHERE rental_duration > 5);
     
---  Otra forma de encontrar la fecha es:  DATEDIFF(return_date, rental_date) > 5);
-
-
-
+--  Otra opción es hacerlo con:  DATEDIFF(return_date, rental_date) > 5);
+   	  	
+SELECT title
+FROM film
+	INNER JOIN inventory i USING (film_id)
+	INNER JOIN rental AS r USING (inventory_id)
+WHERE r.rental_id IN (
+	SELECT rental_id 
+   	FROM rental
+   	WHERE DATEDIFF(return_date, rental_date) > 5);
+   
+   
+   
+   	
 -- 23. Encuentra el nombre y apellido de los actores que no han actuado en ninguna película de la categoría "Horror". Utiliza una subconsulta para encontrar 
 -- los actores que han actuado en películas de la categoría "Horror" y luego exclúyelos de la lista de actores.
 
